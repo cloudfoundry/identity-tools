@@ -14,3 +14,7 @@ Some batch jobs used to keep the UAA and Cloudcontroller databases
 synchronized.  Deployed as a servlet application, e.g. if deployed as
 `/batch` then there is a Spring Batch Admin UI and set of JSON
 endpoints at that URL.
+
+## License
+
+All projects individually licensed (ASL 2.0 unless otherwise stated).
