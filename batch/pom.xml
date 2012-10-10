@@ -33,7 +33,7 @@
 	
     <groupId>com.cloudfoundry.identity</groupId>
 	<artifactId>cloudfoundry-identity-batch</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>war</packaging>
 	<name>Cloud Foundry Identity Batch</name>
 	<description>Cloud Foundry Identity Batch Jobs</description>
@@ -128,7 +128,7 @@
 					<dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
-					<dotGitDirectory>../../.git</dotGitDirectory>
+					<dotGitDirectory>../.git</dotGitDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -307,7 +307,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
