@@ -57,7 +57,7 @@
 		<property name="order" value="-1"/>
 	</bean>
 
-	<bean id="varzEndpoint" class="org.cloudfoundry.identity.uaa.varz.VarzEndpoint">
+	<bean id="varzEndpoint" class="org.cloudfoundry.identity.varz.VarzEndpoint">
 		<property name="server" ref="mbeanServer" />
 		<property name="staticValues">
 			<map>
