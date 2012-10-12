@@ -10,12 +10,11 @@
  * subcomponents is subject to the terms and conditions of the
  * subcomponent's license, as noted in the LICENSE file.
  */
-package org.cloudfoundry.identity.uaa.login;
+package org.cloudfoundry.identity.varz;
 
 import static org.junit.Assert.assertNotNull;
 
 import org.cloudfoundry.identity.uaa.config.YamlPropertiesFactoryBean;
-import org.cloudfoundry.identity.uaa.varz.VarzEndpoint;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

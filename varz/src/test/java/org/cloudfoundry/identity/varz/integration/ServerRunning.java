@@ -10,7 +10,7 @@
  * subcomponents is subject to the terms and conditions of the
  * subcomponent's license, as noted in the LICENSE file.
  */
-package org.cloudfoundry.identity.uaa.login.integration;
+package org.cloudfoundry.identity.varz.integration;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -159,7 +159,7 @@ public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper 
 		RestTemplate client = new RestTemplate();
 		boolean online = false;
 		try {
-			client.getForEntity(new UriTemplate(getUrl("/login")).toString(), String.class);
+			client.getForEntity(new UriTemplate(getUrl("/info")).toString(), String.class);
 			online = true;
 			logger.info("Basic connectivity test passed");
 		}

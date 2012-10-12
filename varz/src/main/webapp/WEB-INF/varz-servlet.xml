@@ -19,6 +19,7 @@
 	<context:mbean-server id="mbeanServer" />
 	
 	<security:http pattern="/healthz/**" security="none"/>
+	<security:http pattern="/info/**" security="none"/>
 
 	<http pattern="/**" create-session="stateless" entry-point-ref="authenticationEntryPoint"
 		security-context-repository-ref="securityContextRepository" xmlns="http://www.springframework.org/schema/security">
@@ -57,7 +58,7 @@
 		<property name="order" value="-1"/>
 	</bean>
 
-	<bean id="varzEndpoint" class="org.cloudfoundry.identity.uaa.varz.VarzEndpoint">
+	<bean id="varzEndpoint" class="org.cloudfoundry.identity.varz.VarzEndpoint">
 		<property name="server" ref="mbeanServer" />
 		<property name="staticValues">
 			<map>
