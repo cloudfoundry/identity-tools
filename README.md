@@ -15,6 +15,11 @@ synchronized.  Deployed as a servlet application, e.g. if deployed as
 `/batch` then there is a Spring Batch Admin UI and set of JSON
 endpoints at that URL.
 
+##  Szxcvbn
+
+Scala port of the zxcvbn project (MIT licensed). See the subproject
+readme file for more details.
+
 ## License
 
 All projects individually licensed (ASL 2.0 unless otherwise stated).
