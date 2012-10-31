@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.cloudfoundry.identity.uaa.util.UaaStringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.expression.MapAccessor;
@@ -93,7 +92,7 @@ public class VarzEndpoint implements EnvironmentAware {
 	 * @param environmentProperties the environment properties to set
 	 */
 	public void setEnvironmentProperties(Properties environmentProperties) {
-		this.environmentProperties = UaaStringUtils.hidePasswords(environmentProperties);
+		this.environmentProperties = hidePasswords(environmentProperties);
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class VarzEndpoint implements EnvironmentAware {
 		Map<String, Object> result = new LinkedHashMap<String, Object>(statix);
 
 		if (!buildProperties.isEmpty()) {
-			result.put("app", UaaStringUtils.getMapFromProperties(buildProperties, "build."));
+			result.put("app", getMapFromProperties(buildProperties, "build."));
 		}
 
 		if (!gitProperties.isEmpty()) {
@@ -314,13 +313,13 @@ public class VarzEndpoint implements EnvironmentAware {
 
 			String type = name.getKeyProperty("type");
 			if (type != null) {
-				type = UaaStringUtils.camelToUnderscore(type);
+				type = VarzStringUtils.camelToUnderscore(type);
 				objects = getMap(objects, type);
 			}
 
 			String key = name.getKeyProperty("name");
 			if (key != null) {
-				key = UaaStringUtils.camelToUnderscore(key);
+				key = VarzStringUtils.camelToUnderscore(key);
 				objects = getMap(objects, key);
 			}
 
@@ -328,7 +327,7 @@ public class VarzEndpoint implements EnvironmentAware {
 				if (property.equals("type") || property.equals("name")) {
 					continue;
 				}
-				key = UaaStringUtils.camelToUnderscore(property);
+				key = VarzStringUtils.camelToUnderscore(property);
 				objects = getMap(objects, key);
 				String value = name.getKeyProperty(property);
 				objects = getMap(objects, value);
@@ -452,4 +451,42 @@ public class VarzEndpoint implements EnvironmentAware {
 		}
 
 	}
+
+	/**
+	 * @param properties
+	 * @return new properties with no plaintext passwords
+	 */
+	public static Properties hidePasswords(Properties properties) {
+		Properties result = new Properties();
+		result.putAll(properties);
+		for (String key : properties.stringPropertyNames()) {
+			if (isPassword(key)) {
+				result.put(key, "#");
+			}
+		}
+		return result;
+	}
+
+	private static boolean isPassword(String key) {
+		return key.endsWith("password") || key.endsWith("secret") || key.endsWith("signing-key");
+	}
+
+	/**
+	 * Extract a Map from some properties by removing a prefix from the key names.
+	 * 
+	 * @param properties the properties to use
+	 * @param prefix the prefix to strip from key names
+	 * @return a map of String values
+	 */
+	public static Map<String, ?> getMapFromProperties(Properties properties, String prefix) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		for (String key : properties.stringPropertyNames()) {
+			if (key.startsWith(prefix)) {
+				String name = key.substring(prefix.length());
+				result.put(name, properties.getProperty(key));
+			}
+		}
+		return result;
+	}
+
 }
