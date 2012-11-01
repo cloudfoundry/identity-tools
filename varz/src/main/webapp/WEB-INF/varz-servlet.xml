@@ -18,7 +18,6 @@
 
 	<context:mbean-server id="mbeanServer" />
 	
-	<security:http pattern="/healthz/**" security="none"/>
 	<security:http pattern="/info/**" security="none"/>
 
 	<http pattern="/**" create-session="stateless" entry-point-ref="authenticationEntryPoint"
