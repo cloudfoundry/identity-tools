@@ -15,7 +15,6 @@ package org.cloudfoundry.identity.varz.integration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.cloudfoundry.identity.uaa.integration.UaaTestAccounts;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,7 +32,7 @@ public class VarzEndpointIntegrationTests {
 	@Rule
 	public ServerRunning serverRunning = ServerRunning.isRunning();
 
-	private UaaTestAccounts testAccounts = UaaTestAccounts.standard(serverRunning);
+	private VarzTestAccounts testAccounts = VarzTestAccounts.standard();
 	
 	@Before
 	public void checkVcap() {
