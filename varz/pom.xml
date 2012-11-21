@@ -33,7 +33,7 @@
 
 	<groupId>com.cloudfoundry.identity</groupId>
 	<artifactId>cloudfoundry-identity-varz</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>war</packaging>
 	<name>varz</name>
 	<description>Cloud Foundry Varz App</description>
