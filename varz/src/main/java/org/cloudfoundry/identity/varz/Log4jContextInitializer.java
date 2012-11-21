@@ -13,8 +13,17 @@
 
 package org.cloudfoundry.identity.varz;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.MDC;
 
@@ -29,7 +38,7 @@ import org.apache.log4j.MDC;
  * @author Dave Syer
  * 
  */
-public class Log4jContextInitializer implements ServletContextListener {
+public class Log4jContextInitializer implements ServletContextListener, Filter {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -38,6 +47,25 @@ public class Log4jContextInitializer implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
+	}
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
+		MDC.put("context", ((HttpServletRequest)request).getContextPath());
+		try {
+			chain.doFilter(request, response);
+		} finally {
+			MDC.remove("context");
+		}
+	}
+
+	@Override
+	public void destroy() {
 	}
 
 }

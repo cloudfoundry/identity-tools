@@ -19,6 +19,16 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>log4jFilter</filter-name>
+		<filter-class>org.cloudfoundry.identity.varz.Log4jContextInitializer</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>log4jFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<filter-mapping>
 		<filter-name>varzSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
@@ -46,16 +56,6 @@
 	<servlet-mapping>
 		<servlet-name>varz</servlet-name>
 		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>varz</servlet-name>
-		<url-pattern>/healthz</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>varz</servlet-name>
-		<url-pattern>/healthz/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.cloudfoundry.identity</groupId>
 		<artifactId>cloudfoundry-identity-parent</artifactId>
-		<version>1.1.2</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<licenses>
@@ -33,7 +33,7 @@
 
 	<groupId>com.cloudfoundry.identity</groupId>
 	<artifactId>cloudfoundry-identity-varz</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>war</packaging>
 	<name>varz</name>
 	<description>Cloud Foundry Varz App</description>
@@ -82,21 +82,7 @@
 				<dependency>
 					<groupId>${project.groupId}</groupId>
 					<artifactId>uaa</artifactId>
-					<version>${project.version}</version>
-					<type>war</type>
-					<scope>tomcat</scope>
-				</dependency>
-				<dependency>
-					<groupId>${project.groupId}</groupId>
-					<artifactId>api</artifactId>
-					<version>${project.version}</version>
-					<type>war</type>
-					<scope>tomcat</scope>
-				</dependency>
-				<dependency>
-					<groupId>${project.groupId}</groupId>
-					<artifactId>app</artifactId>
-					<version>${project.version}</version>
+					<version>${identity.version}</version>
 					<type>war</type>
 					<scope>tomcat</scope>
 				</dependency>
@@ -245,19 +231,7 @@
 
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
 
@@ -276,15 +250,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-openid</artifactId>
-			<version>${spring.security.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>${spring.security.oauth.version}</version>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.2</version>
 		</dependency>
 
 		<dependency>
@@ -302,23 +270,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.2.1</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
