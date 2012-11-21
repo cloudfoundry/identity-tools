@@ -10,7 +10,7 @@
  * subcomponents is subject to the terms and conditions of the
  * subcomponent's license, as noted in the LICENSE file.
  */
-package org.cloudfoundry.identity.uaa.login.integration;
+package org.cloudfoundry.identity.varz.integration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -49,11 +49,11 @@ public class VarzEndpointIntegrationTests {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", testAccounts.getVarzAuthorizationHeader());
-		ResponseEntity<String> response = serverRunning.getForString("/varz", headers);
+		ResponseEntity<String> response = serverRunning.getForString("/", headers);
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 
 		String map = response.getBody();
-		assertTrue(map.contains("spring.application"));
+		assertTrue(map.contains("thread_pool"));
 
 	}
 
