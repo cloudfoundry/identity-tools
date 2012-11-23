@@ -38,6 +38,7 @@ public class UserMigrationJobIntegrationTests extends AbstractJobIntegrationTest
 
 	@Test
 	public void testJobRuns() throws Exception {
+
 		TestUtils.deleteFrom(cloudControllerDataSource, "users");
 		TestUtils.deleteFrom(uaaDataSource, "users");
 		new JdbcTemplate(cloudControllerDataSource)

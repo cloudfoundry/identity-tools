@@ -74,6 +74,7 @@ public abstract class AbstractJobIntegrationTests {
 
 	@Before
 	public void setUpData() throws Exception {
+		TestUtils.runScript(uaaDataSource, "drop-name-constraints");
 		TestUtils.runScript(cloudControllerDataSource, "cloud-controller-schema");
 		TestUtils.runScript(uaaDataSource, "basic-schema");
 		new JdbcTemplate(cloudControllerDataSource).update(
