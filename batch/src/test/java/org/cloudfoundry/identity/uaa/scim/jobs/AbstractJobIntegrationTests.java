@@ -75,7 +75,7 @@ public abstract class AbstractJobIntegrationTests {
 	@Before
 	public void setUpData() throws Exception {
 		TestUtils.runScript(cloudControllerDataSource, "cloud-controller-schema");
-		TestUtils.runScript(uaaDataSource, "schema");
+		TestUtils.runScript(uaaDataSource, "basic-schema");
 		new JdbcTemplate(cloudControllerDataSource).update(
 				"insert into users (active, email, crypted_password, created_at, updated_at) values (?, ?, ?, ?, ?)",
 				true, "marissa@test.org", "ENCRYPT_ME", new Date(), new Date());

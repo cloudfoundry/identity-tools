@@ -22,7 +22,11 @@
 					commit-interval="100" skip-limit="100">
 					<skippable-exception-classes>
 						<include class="org.cloudfoundry.identity.uaa.scim.job.InvalidEmailException" />
+						<include class="org.springframework.dao.DataAccessException" />
 					</skippable-exception-classes>
+					<listeners>
+						<listener ref="userDataMigrationSkipListener" />
+					</listeners>
 				</chunk>
 			</tasklet>
 		</step>
@@ -32,8 +36,8 @@
 	<job id="userDataBackwardsJob" xmlns="http://www.springframework.org/schema/batch">
 		<step id="copyBackwardsDataStep">
 			<tasklet>
-				<chunk reader="uaaUserReader" processor="uaaUserProcessor" writer="cloudControllerUserWriter"
-					commit-interval="100" skip-limit="100">
+				<chunk reader="uaaUserReader" processor="uaaUserProcessor" writer="cloudControllerUserWriter" commit-interval="100"
+					skip-limit="100">
 					<skippable-exception-classes>
 						<include class="org.cloudfoundry.identity.uaa.scim.job.InvalidEmailException" />
 					</skippable-exception-classes>
@@ -59,6 +63,19 @@
 		</step>
 	</job>
 
+	<job id="clearNamesJob" xmlns="http://www.springframework.org/schema/batch">
+		<step id="clearNamesStep">
+			<tasklet>
+				<chunk reader="uaaUserReader" processor="kosherNameFilter" writer="nameCancellingWriter" commit-interval="100"
+					skip-limit="100">
+					<skippable-exception-classes>
+						<include class="org.cloudfoundry.identity.uaa.scim.job.InvalidEmailException" />
+					</skippable-exception-classes>
+				</chunk>
+			</tasklet>
+		</step>
+	</job>
+
 	<step id="adminUsersStep" xmlns="http://www.springframework.org/schema/batch">
 		<tasklet>
 			<bean xmlns="http://www.springframework.org/schema/beans" class="org.cloudfoundry.identity.uaa.scim.job.AdminUsersTasklet"
@@ -71,6 +88,29 @@
 			</bean>
 		</tasklet>
 	</step>
+
+	<bean id="userDataMigrationSkipListener" class="org.cloudfoundry.identity.uaa.scim.job.ItemWriterSkipListener"
+		scope="step">
+		<property name="writers">
+			<map key-type="java.lang.Class">
+				<entry key="org.springframework.dao.DataAccessException">
+					<bean class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+						<property name="dataSource" ref="uaaDataSource" />
+						<property name="sql">
+							<value>insert into users
+								(id,created,lastModified,userName,email,password,givenName,familyName)
+								values
+								(:id,:created,:lastModified,:userName,:email,:password,:givenName,:familyName)
+							</value>
+						</property>
+						<property name="itemSqlParameterSourceProvider">
+							<bean class="org.cloudfoundry.identity.uaa.scim.job.MapItemSqlParameterSourceProvider" />
+						</property>
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
 
 	<bean id="cloudControllerUserReader" class="org.springframework.batch.item.database.JdbcPagingItemReader" scope="step">
 		<property name="dataSource" ref="cloudControllerDataSource" />
@@ -150,13 +190,26 @@
 		<property name="dataSource" ref="uaaDataSource" />
 	</bean>
 
+	<bean id="kosherNameFilter" class="org.cloudfoundry.identity.uaa.scim.job.KosherNameFilterProcessor" />
+
+	<bean id="nameCancellingWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource" ref="uaaDataSource" />
+		<property name="sql">
+			<value>update users set givenName=null, familyName=null where id=:id
+			</value>
+		</property>
+		<property name="itemSqlParameterSourceProvider">
+			<bean class="org.cloudfoundry.identity.uaa.scim.job.MapItemSqlParameterSourceProvider" />
+		</property>
+	</bean>
+
 	<bean id="uaaUserWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
 		<property name="dataSource" ref="uaaDataSource" />
 		<property name="sql">
 			<value>insert into users
-				(id,created,lastModified,userName,email,password,givenName,familyName)
+				(id,created,lastModified,userName,email,password)
 				values
-				(:id,:created,:lastModified,:userName,:email,:password,:givenName,:familyName)
+				(:id,:created,:lastModified,:userName,:email,:password)
 			</value>
 		</property>
 		<property name="itemSqlParameterSourceProvider">
@@ -184,7 +237,8 @@
 			<value>
 				update users set
 				version=:version,lastModified=:lastModified,password=:password
-				where userName=:userName and password!=:password
+				where userName=:userName and
+				password!=:password
 			</value>
 		</property>
 		<property name="itemSqlParameterSourceProvider">
