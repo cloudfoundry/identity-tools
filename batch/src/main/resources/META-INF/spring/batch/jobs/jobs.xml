@@ -137,7 +137,7 @@
 		<property name="dataSource" ref="uaaDataSource" />
 		<property name="parameterValues">
 			<map>
-				<entry key="created" value="#{jobParameters['start.date']?:0}" />
+				<entry key="created" value="#{jobParameters['start.date']?:new java.util.Date(0L)}" />
 			</map>
 		</property>
 		<property name="queryProvider">
@@ -159,7 +159,7 @@
 		<property name="dataSource" ref="cloudControllerDataSource" />
 		<property name="parameterValues">
 			<map>
-				<entry key="start.date" value="#{jobParameters['start.date']}" />
+				<entry key="start.date" value="#{jobParameters['start.date']?:new java.util.Date(0L)}" />
 			</map>
 		</property>
 		<property name="queryProvider">
