@@ -40,7 +40,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.security.oauth2.client.test.RestTemplateHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -73,7 +72,7 @@ import org.springframework.web.util.UriUtils;
  * @author Dave Syer
  * 
  */
-public class ServerRunning implements MethodRule, RestTemplateHolder, UrlHelper {
+public class ServerRunning implements MethodRule, UrlHelper {
 
 	private static Log logger = LogFactory.getLog(ServerRunning.class);
 

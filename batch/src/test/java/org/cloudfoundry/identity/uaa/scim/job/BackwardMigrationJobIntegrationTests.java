@@ -8,7 +8,7 @@
  * subcomponents is subject to the terms and conditions of the subcomponent's license, as noted in the LICENSE file.
  */
 
-package org.cloudfoundry.identity.uaa.scim.jobs;
+package org.cloudfoundry.identity.uaa.scim.job;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.cloudfoundry.identity.uaa.test.TestUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
@@ -31,34 +30,29 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author Dave Syer
  * 
  */
-public class UserMigrationJobIntegrationTests extends AbstractJobIntegrationTests {
+public class BackwardMigrationJobIntegrationTests extends AbstractJobIntegrationTests {
 
 	@Autowired
-	@Qualifier("userDataMigrationJob")
+	@Qualifier("userDataBackwardsJob")
 	private Job job;
 
 	@Test
-	@Ignore // TODO unignore when merging back to master
 	public void testJobRuns() throws Exception {
 		TestUtils.deleteFrom(cloudControllerDataSource, "users");
 		TestUtils.deleteFrom(uaaDataSource, "users");
-		new JdbcTemplate(cloudControllerDataSource)
-				.update("insert into users (id, active, email, crypted_password, created_at, updated_at) values (?, ?, ?, ?, ?, ?)",
-						4, true, "invalid", "ENCRYPT_ME", new Date(), new Date());
-		new JdbcTemplate(cloudControllerDataSource)
-				.update("insert into users (id, active, email, crypted_password, created_at, updated_at) values (?, ?, ?, ?, ?, ?)",
-						4, true, "vcap_tester@vmware.com", "ENCRYPT_ME", new Date(), new Date());
-		JobExecution execution = jobLauncher.run(job,
-				new JobParametersBuilder().addString("users", "marissa@test.org,vcap_tester@vmware.com")
-						.toJobParameters());
+		JdbcTemplate uaaTemplate = new JdbcTemplate(uaaDataSource);
+		uaaTemplate.update("insert into users "
+				+ "(id, active, userName, email, password, familyName, givenName, created, lastModified) "
+				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?)", "FOO", true, "uniqua", "uniqua@test.org", "ENCRYPT_ME", "Una",
+				"Uniqua", new Date(), new Date());
+		JobExecution execution = jobLauncher.run(job, new JobParametersBuilder().addDate("start.date", new Date(0L))
+				.toJobParameters());
 		assertEquals(BatchStatus.COMPLETED, execution.getStatus());
 		Iterator<StepExecution> iterator = execution.getStepExecutions().iterator();
-		assertEquals(1, iterator.next().getWriteCount());
-		assertEquals(1, iterator.next().getWriteCount());
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(uaaDataSource);
+		StepExecution step = iterator.next();
+		assertEquals(1, step.getReadCount());
+		assertEquals(1, step.getWriteCount());
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(cloudControllerDataSource);
 		assertEquals(1, jdbcTemplate.queryForInt("select count(*) from users"));
-		assertEquals(1,
-				jdbcTemplate.queryForInt("select count(*) from users where authorities=?", "uaa.admin,uaa.user"));
 	}
-
 }
