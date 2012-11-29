@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>cloudfoundry-identity-batch</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>war</packaging>
 	<name>Cloud Foundry Identity Batch</name>
 	<description>Cloud Foundry Identity Batch Jobs</description>
