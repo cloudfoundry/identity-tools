@@ -1,4 +1,4 @@
-package org.cloudfoundry.identity.statsd.integration;
+package org.cloudfoundry.identity.statsd;
 
 import org.cloudfoundry.identity.statsd.Application;
 import org.cloudfoundry.identity.statsd.UaaMetricsEmitter;
@@ -26,7 +26,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-public class UaaMetricsEmitterTest {
+public class UaaMetricsScheduledTest {
 
     @Autowired
     private UaaMetricsEmitter uaaMetricsEmitter;

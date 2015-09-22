@@ -1,7 +1,13 @@
 buildscript {
+
   repositories {
     mavenCentral()
+    jcenter()
+    maven {
+      url 'http://repo.spring.io/plugins-release'
+    }
   }
+
   dependencies {
     classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.6.RELEASE")
   }
@@ -29,12 +35,15 @@ dependencies {
   compile "log4j:log4j:1.2.14"
   compile "org.apache.httpcomponents:httpclient:4.2.1"
   compile "org.springframework:spring-web:4.2.1.RELEASE"
-  providedRuntime group: 'javax.servlet', name: 'javax.servlet-api', version:'3.0.1'
+  providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.0.1'
   providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
   testCompile "org.mockito:mockito-all:1.8.5"
   testCompile "org.springframework.boot:spring-boot-starter-test"
+  testCompile "org.cloudfoundry.identity:cloudfoundry-identity-common:2.7.0"
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.3'
+task integrationTest(type: Test) {
+  filter {
+    includeTestsMatching "*IT"
+  }
 }
