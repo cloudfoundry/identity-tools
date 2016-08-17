@@ -54,6 +54,8 @@ public class UaaMetricsEmitterTests {
         mBeanMap1.put("principal_authentication_failure_count", 4);
         mBeanMap1.put("principal_not_found_count", 5);
         mBeanMap1.put("user_authentication_failure_count", 6);
+        mBeanMap1.put("client_authentication_count", 7);
+        mBeanMap1.put("client_authentication_failure_count", 42);
 
         mBeanMap2 = new MBeanMap();
         mBeanMap2.put("loggingAuditService", mBeanMap1);
@@ -73,6 +75,8 @@ public class UaaMetricsEmitterTests {
         Mockito.verify(statsDClient).gauge("audit_service.principal_authentication_failure_count", 4);
         Mockito.verify(statsDClient).gauge("audit_service.principal_not_found_count", 5);
         Mockito.verify(statsDClient).gauge("audit_service.user_authentication_failure_count", 6);
+        Mockito.verify(statsDClient).gauge("audit_service.client_authentication_count", 7);
+        Mockito.verify(statsDClient).gauge("audit_service.client_authentication_failure_count", 42);
     }
 
     @Test
@@ -84,7 +88,7 @@ public class UaaMetricsEmitterTests {
         Mockito.when(metricsUtils.pullUpMap("spring.application", "*", server)).thenReturn((Map)mBeanMap3);
         uaaMetricsEmitter.emitMetrics();
         Mockito.verify(statsDClient).gauge("audit_service.user_not_found_count", 1);
-        Mockito.verify(statsDClient, times(4)).gauge(anyString(), anyInt());
+        Mockito.verify(statsDClient, times(6)).gauge(anyString(), anyInt());
     }
 
     @Test
