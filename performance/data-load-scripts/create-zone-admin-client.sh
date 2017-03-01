@@ -45,31 +45,7 @@ function create_zone_admin_client {
     loc_identity_zone=$1
     loc_client_id=$2
     loc_client_secret=$3
-    
-    # Check that the current token has sufficient privileges to create the client id.
-    zone_admin_authority="zones.$loc_identity_zone.admin"
-    token_scope=`uaac token decode | grep "scope:"`
 
-    if [[ $token_scope != *"$zone_admin_authority"* ]]
-    then
-        echo "Your current token does not have the $zone_admin_authority authority. Please add this authority to your client or user then try again.";
-        exit 1
-    fi
-
-    payload='{ "client_id" : "'"$loc_client_id"'", "client_secret" : "'"$loc_client_secret"'", "authorized_grant_types" : ["client_credentials"], "scope" : ["uaa.none"], "authorities" : ["clients.admin", "clients.read", "clients.write", "clients.secret", "zones.'"$loc_identity_zone"'.admin", "scim.read", "scim.write", "idps.read", "idps.write", "uaa.resource"], "resource_ids" : ["none"], "allowedproviders" : ["uaa"]}'
-
-    if [[ -z $skip_ssl ]]; then
-        uaac curl -XPOST -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Identity-Zone-Id: $loc_identity_zone" -d "$payload" /oauth/clients
-    else
-        uaac curl -XPOST -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Identity-Zone-Id: $loc_identity_zone" -d "$payload" /oauth/clients --insecure
-    fi    
-}
-
-function create_zone_admin_client {
-    loc_identity_zone=$1
-    loc_client_id=$2
-    loc_client_secret=$3
-    
     # Check that the current token has sufficient privileges to create the client id.
     zone_admin_authority="zones.$loc_identity_zone.admin"
     token_scope=`uaac token decode | grep "scope:"`
