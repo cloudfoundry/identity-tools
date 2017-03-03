@@ -48,7 +48,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="env" elementType="Argument">
             <stringProp name="Argument.name">env</stringProp>
-            <stringProp name="Argument.value">uaa.ge.com</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -96,14 +96,14 @@
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${env}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/oauth/authorize?client_id=zoneclient${uaa_users}&amp;scope=&amp;response_type=code&amp;&amp;redirect_uri=https://example.io</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/oauth/authorize?client_id=zoneclient${uaa_users}&amp;scope=&amp;response_type=code&amp;&amp;redirect_uri=https://example.io</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -147,8 +147,8 @@
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable" enabled="true">
             <stringProp name="variableName">uaa_users</stringProp>
             <stringProp name="outputFormat"></stringProp>
-            <stringProp name="minimumValue">1001</stringProp>
-            <stringProp name="maximumValue">10000</stringProp>
+            <stringProp name="minimumValue">1</stringProp>
+            <stringProp name="maximumValue">2</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">false</boolProp>
           </RandomVariableConfig>
@@ -166,14 +166,14 @@
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${env}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/login</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -220,14 +220,14 @@
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${env}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/login.do</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/login.do</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -265,14 +265,14 @@
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${env}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/oauth/authorize?client_id=zoneclient${uaa_users}&amp;scope=&amp;response_type=code&amp;&amp;redirect_uri=https://example.io</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/oauth/authorize?client_id=zoneclient${uaa_users}&amp;scope=&amp;response_type=code&amp;&amp;redirect_uri=http://perfzone${uaa_users}.${env}:8080/uaa</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -317,7 +317,7 @@
             <stringProp name="variableName">uaa_users</stringProp>
             <stringProp name="outputFormat"></stringProp>
             <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">1000</stringProp>
+            <stringProp name="maximumValue">2</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">false</boolProp>
           </RandomVariableConfig>
@@ -329,20 +329,20 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">grant_type=authorization_code&amp;response_type=token&amp;code=${auth_code}&amp;redirect_uri=https://example.io</stringProp>
+                <stringProp name="Argument.value">grant_type=authorization_code&amp;response_type=token&amp;code=${auth_code}&amp;redirect_uri=http://perfzone${uaa_users}.${env}:8080/uaa</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${env}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/oauth/token</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/oauth/token</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -391,7 +391,7 @@
             <stringProp name="variableName">uaa_users</stringProp>
             <stringProp name="outputFormat"></stringProp>
             <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">1000</stringProp>
+            <stringProp name="maximumValue">2</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">false</boolProp>
           </RandomVariableConfig>
@@ -401,7 +401,7 @@
             <stringProp name="parameters"></stringProp>
             <boolProp name="resetInterpreter">false</boolProp>
             <stringProp name="script">import org.apache.commons.codec.binary.Base64;
-String clientId= &quot;zoneclient&quot;+vars.get(&quot;uaa_users&quot;)+&quot;:perfzone-@dmin-s3cr3t&quot;;
+String clientId= &quot;zoneclient&quot;+vars.get(&quot;uaa_users&quot;)+&quot;:clientsecret&quot;;
 byte[] encryptedClientId = Base64.encodeBase64(clientId.getBytes());
 vars.put(&quot;genStringValue&quot;,new String(encryptedClientId));</stringProp>
           </BeanShellPreProcessor>
@@ -419,14 +419,14 @@ vars.put(&quot;genStringValue&quot;,new String(encryptedClientId));</stringProp>
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${env}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/check_token</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/check_token</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>

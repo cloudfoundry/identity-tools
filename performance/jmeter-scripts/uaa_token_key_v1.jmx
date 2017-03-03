@@ -58,7 +58,7 @@
           </elementProp>
           <elementProp name="host" elementType="Argument">
             <stringProp name="Argument.name">host</stringProp>
-            <stringProp name="Argument.value">uaa.ge.com</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -91,14 +91,14 @@
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">perfzone${uaa_users}.${host}</stringProp>
-          <stringProp name="HTTPSampler.port">443</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.proxyHost">${proxy_host}</stringProp>
           <stringProp name="HTTPSampler.proxyPort">${proxy_port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/token_key</stringProp>
+          <stringProp name="HTTPSampler.path">/uaa/token_key</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -113,10 +113,33 @@
             <stringProp name="variableName">uaa_users</stringProp>
             <stringProp name="outputFormat"></stringProp>
             <stringProp name="minimumValue">1</stringProp>
-            <stringProp name="maximumValue">1000</stringProp>
+            <stringProp name="maximumValue">2</stringProp>
             <stringProp name="randomSeed"></stringProp>
             <boolProp name="perThread">false</boolProp>
           </RandomVariableConfig>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Basic ${genStringValue}</stringProp>
+              </elementProp>
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Content-Type</stringProp>
+                <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="script">import org.apache.commons.codec.binary.Base64;
+String clientId= &quot;zoneclient&quot;+vars.get(&quot;uaa_users&quot;)+&quot;:clientsecret&quot;;
+byte[] encryptedClientId = Base64.encodeBase64(clientId.getBytes());
+vars.put(&quot;genStringValue&quot;,new String(encryptedClientId));</stringProp>
+          </BeanShellPreProcessor>
           <hashTree/>
         </hashTree>
         <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
