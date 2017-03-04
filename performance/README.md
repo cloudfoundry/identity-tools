@@ -5,7 +5,6 @@ README
 1. Download Jmeter and add the bin directory to the path
 
 ## Run data-load-scripts
-These scripts must be run in this order only.
 
 1. Add `127.0.0.1 perfzone{count}.localhost` to /etc/hosts file. Add an entry for each zone that will be created. ex: perfzone1, perfzone2
 2. Run `create_uaa_zone_clients.sh` and specify `number of identity zones` to be created as argument of this script. This script creates specified number of zones and one client in each zone.
