@@ -31,4 +31,4 @@ common/src/main/resources/build.properties
 common/src/main/resources/git.properties
 bin
 phantomjsdriver.log
-
+.idea/
