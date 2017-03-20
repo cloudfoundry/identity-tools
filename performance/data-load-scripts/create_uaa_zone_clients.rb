@@ -1,19 +1,28 @@
 require 'json'
 
-#Usage - ruby create_uaa_zone_client.rb <Number of Identity zones to be created>
-host='http://localhost:8080/uaa'
-admin_client_secret='adminsecret'
-admin_client_id='admin'
-
-if ARGV.length < 1
-  puts ' Please provide the number of Identity zones to be created.. Exiting script'
+if ARGV.length < 3
+  puts 'Usage: create_uaa_zone_clients NUMBER_OF_ZONES NUMBER_OF_CLIENTS_PER_ZONE NUMBER_OF_USERS_PER_ZONE'
   exit
 end
 
-number_of_zones = ARGV[0]
+number_of_zones = ARGV[0].to_i
+number_of_clients_per_zone = ARGV[1].to_i
+number_of_users_per_zone = ARGV[2].to_i
 
-`uaac target #{host}`
-`uaac token client get #{admin_client_id} -s #{admin_client_secret}`
+if number_of_zones <= 0
+  puts 'Must specify a positive number of identity zones'
+  exit
+end
+
+if number_of_clients_per_zone <= 0
+  puts 'Must specify a positive number of clients per zone'
+  exit
+end
+
+if number_of_users_per_zone <= 0
+  puts 'Must specify a positive number of users per zone'
+  exit
+end
 
 class IdentityZone
   attr_reader :id, :subdomain, :name, :description, :skip_ssl
@@ -31,6 +40,7 @@ class IdentityZone
   end
 
   def create
+    puts "Creating zone #{@id} at #{@subdomain}"
     base_command = "uaac curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" /identity-zones -d '#{to_json()}'"
     if @skip_ssl
       base_command += ' --insecure'
@@ -51,14 +61,6 @@ class ZoneClient
     @skip_ssl = skip_ssl
   end
 
-  def checkTokenScope
-    zone_admin_authority = "zones.#{@identity_zone}.admin"
-    scopes = `uaac token decode | grep "scope:"`
-    if !scopes.split(' ').include?(zone_admin_authority)
-      raise "Your current token does not have #{zone_admin_authority} in scopes list"
-    end
-  end
-
   def to_json
     {'client_id' => @id,
      'client_secret' => @secret,
@@ -71,7 +73,7 @@ class ZoneClient
   end
 
   def create
-    checkTokenScope()
+    puts "(In zone #{identity_zone}) Creating client #{@id}"
     base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /oauth/clients -d '#{to_json()}'"
 
     if @skip_ssl
@@ -79,6 +81,60 @@ class ZoneClient
     end
 
     `#{base_command}`
+    self
+  end
+end
+
+class ZoneUser
+  attr_reader :identity_zone, :username, :password, :skip_ssl
+
+  def initialize(username, password, identity_zone, skip_ssl=true)
+    @username = username
+    @password = password
+    @identity_zone = identity_zone
+    @skip_ssl = skip_ssl
+  end
+
+  # def uaagroups(grouplist)
+  #   grouplist.each do |group|
+  #     # TODO we need to do this with curl and a zone header since we don't want to change /etc/hosts for each zone
+  #     base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /Users -d '#{to_json()}'"
+  #     `#{add_ssl_option(base_command)}`
+  #     `uaac group add #{group}`
+  #     `uaac member add #{group} #{@username}`
+  #   end
+  # end
+
+  def to_json
+    {
+        'userName' => @username,
+        'name' => {
+            'formatted' => 'given name family name',
+            'familyName' => "#{@username}FN",
+            'givenName' => "#{@username}LN"
+        },
+        'emails' => [{
+                         'value' => "#{@username}@testcf.com",
+                         'primary' => true
+                     }],
+        'password' => @password
+    }.to_json
+  end
+
+  def create
+    puts "(In zone #{identity_zone}) Creating user #{@username}"
+    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /Users -d '#{to_json()}'"
+    `#{add_ssl_option(base_command)}`
+    self
+  end
+
+  private
+
+  def add_ssl_option(base_command)
+    if @skip_ssl
+      base_command += ' --insecure'
+    end
+    base_command
   end
 end
 
@@ -88,8 +144,13 @@ end
   ### Setup UAA Zone and admin client ####
   zone = IdentityZone.new(zone_name, zone_name, "Performance test zone #{zone_number}", "Performance zone")
                      .create()
-  `uaac client update #{admin_client_id} --authorities clients.read,zones.read,clients.secret,zones.write,clients.write,clients.admin,uaa.admin,scim.write,scim.read,zones.#{zone_name}.admin`
-  `uaac token client get #{admin_client_id} -s #{admin_client_secret}`
-  # `./create-zone-admin-client.sh -z #{zone_name} -c zoneclient#{zone_number} -s clientsecret`
-  ZoneClient.new("zoneclient#{zone_number}", 'clientsecret', zone.id).create()
+  number_of_clients_per_zone.times do |client_number|
+    ZoneClient.new("client#{client_number}", 'clientsecret', zone.id).create()
+  end
+
+  number_of_users_per_zone.times do |user_number|
+    ZoneUser.new("user#{user_number}", 'password', zone.id)
+        .create()
+        # .add_to_groups(['acs.attributes.read', 'acs.attributes.write', 'acs.policies.write', 'acs.policies.read'])
+  end
 end
