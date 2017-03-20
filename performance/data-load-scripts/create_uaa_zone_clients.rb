@@ -41,7 +41,7 @@ class IdentityZone
 
   def create
     puts "Creating zone #{@id} at #{@subdomain}"
-    base_command = "uaac curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" /identity-zones -d '#{to_json()}'"
+    base_command = "uaac curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" /identity-zones -d '#{to_json}'"
     if @skip_ssl
       base_command += ' --insecure'
     end
@@ -74,7 +74,7 @@ class ZoneClient
 
   def create
     puts "(In zone #{identity_zone}) Creating client #{@id}"
-    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /oauth/clients -d '#{to_json()}'"
+    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /oauth/clients -d '#{to_json}'"
 
     if @skip_ssl
       base_command += ' --insecure'
@@ -95,16 +95,6 @@ class ZoneUser
     @skip_ssl = skip_ssl
   end
 
-  # def uaagroups(grouplist)
-  #   grouplist.each do |group|
-  #     # TODO we need to do this with curl and a zone header since we don't want to change /etc/hosts for each zone
-  #     base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /Users -d '#{to_json()}'"
-  #     `#{add_ssl_option(base_command)}`
-  #     `uaac group add #{group}`
-  #     `uaac member add #{group} #{@username}`
-  #   end
-  # end
-
   def to_json
     {
         'userName' => @username,
@@ -123,7 +113,7 @@ class ZoneUser
 
   def create
     puts "(In zone #{identity_zone}) Creating user #{@username}"
-    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /Users -d '#{to_json()}'"
+    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /Users -d '#{to_json}'"
     `#{add_ssl_option(base_command)}`
     self
   end
@@ -142,15 +132,12 @@ end
   zone_name = "perfzone#{zone_number}"
 
   ### Setup UAA Zone and admin client ####
-  zone = IdentityZone.new(zone_name, zone_name, "Performance test zone #{zone_number}", "Performance zone")
-                     .create()
+  zone = IdentityZone.new(zone_name, zone_name, "Performance test zone #{zone_number}", "Performance zone").create
   number_of_clients_per_zone.times do |client_number|
-    ZoneClient.new("client#{client_number}", 'clientsecret', zone.id).create()
+    ZoneClient.new("client#{client_number}", 'clientsecret', zone.id).create
   end
 
   number_of_users_per_zone.times do |user_number|
-    ZoneUser.new("user#{user_number}", 'password', zone.id)
-        .create()
-        # .add_to_groups(['acs.attributes.read', 'acs.attributes.write', 'acs.policies.write', 'acs.policies.read'])
+    ZoneUser.new("user#{user_number}", 'password', zone.id).create
   end
 end
