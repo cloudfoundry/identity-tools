@@ -1,4 +1,6 @@
 require 'json'
+require 'net/http'
+require 'uri'
 
 if ARGV.length < 3
   puts 'Usage: create_uaa_zone_clients NUMBER_OF_ZONES NUMBER_OF_CLIENTS_PER_ZONE NUMBER_OF_USERS_PER_ZONE'
@@ -24,6 +26,12 @@ if number_of_users_per_zone <= 0
   exit
 end
 
+uaa = {}
+uaa[:host] = /Target:\s(\S+)/.match(`uaac target`)[1]
+uaa[:token] = /access_token:\s([a-zA-Z0-9\-_\.]+)/.match(`uaac context`)[1]
+
+puts "Targeting #{uaa[:host]}"
+
 class IdentityZone
   attr_reader :id, :subdomain, :name, :description, :skip_ssl
 
@@ -39,14 +47,19 @@ class IdentityZone
     {'id' => @id, 'subdomain' => @subdomain, 'name' => @name, 'description' => @description}.to_json
   end
 
-  def create
+  def create(uaa)
     puts "Creating zone #{@id} at #{@subdomain}"
-    base_command = "uaac curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" /identity-zones -d '#{to_json}'"
-    if @skip_ssl
-      base_command += ' --insecure'
-    end
-
-    `#{base_command}`
+    uri = URI("#{uaa[:host]}/identity-zones")
+    req = Net::HTTP::Post.new uri
+    headers = {
+        'Accept' => 'application/json',
+        'Authorization' => "bearer #{uaa[:token]}",
+        'Content-Type' => 'application/json'
+    }
+    req.initialize_http_header(headers)
+    req.body = to_json
+    http = Net::HTTP.new(uri.hostname, uri.port)
+    puts http.request(req).body
     self
   end
 end
@@ -72,15 +85,20 @@ class ZoneClient
     }.to_json
   end
 
-  def create
+  def create(uaa)
     puts "(In zone #{identity_zone}) Creating client #{@id}"
-    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /oauth/clients -d '#{to_json}'"
-
-    if @skip_ssl
-      base_command += ' --insecure'
-    end
-
-    `#{base_command}`
+    uri = URI("#{uaa[:host]}/oauth/clients")
+    req = Net::HTTP::Post.new uri
+    headers = {
+        'Accept' => 'application/json',
+        'Authorization' => "bearer #{uaa[:token]}",
+        'Content-Type' => 'application/json',
+        'X-Identity-Zone-Id' => @identity_zone
+    }
+    req.initialize_http_header(headers)
+    req.body = to_json
+    http = Net::HTTP.new(uri.hostname, uri.port)
+    puts http.request(req).body
     self
   end
 end
@@ -111,10 +129,20 @@ class ZoneUser
     }.to_json
   end
 
-  def create
+  def create(uaa)
     puts "(In zone #{identity_zone}) Creating user #{@username}"
-    base_command = "uaac curl -XPOST -H \"Accept: application/json\" -H \"Content-Type: application/json\" -H \"X-Identity-Zone-Id: #{@identity_zone}\" /Users -d '#{to_json}'"
-    `#{add_ssl_option(base_command)}`
+    uri = URI("#{uaa[:host]}/Users")
+    req = Net::HTTP::Post.new uri
+    headers = {
+        'Accept' => 'application/json',
+        'Authorization' => "bearer #{uaa[:token]}",
+        'Content-Type' => 'application/json',
+        'X-Identity-Zone-Id' => @identity_zone
+    }
+    req.initialize_http_header(headers)
+    req.body = to_json
+    http = Net::HTTP.new(uri.hostname, uri.port)
+    puts http.request(req).body
     self
   end
 
@@ -132,12 +160,12 @@ end
   zone_name = "perfzone#{zone_number}"
 
   ### Setup UAA Zone and admin client ####
-  zone = IdentityZone.new(zone_name, zone_name, "Performance test zone #{zone_number}", "Performance zone").create
+  zone = IdentityZone.new(zone_name, zone_name, "Performance test zone #{zone_number}", "Performance zone").create(uaa)
   number_of_clients_per_zone.times do |client_number|
-    ZoneClient.new("client#{client_number}", 'clientsecret', zone.id).create
+    ZoneClient.new("client#{client_number}", 'clientsecret', zone.id).create(uaa)
   end
 
   number_of_users_per_zone.times do |user_number|
-    ZoneUser.new("user#{user_number}", 'password', zone.id).create
+    ZoneUser.new("user#{user_number}", 'password', zone.id).create(uaa)
   end
 end
