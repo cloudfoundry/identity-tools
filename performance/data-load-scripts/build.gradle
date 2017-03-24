@@ -1,0 +1,6 @@
+apply plugin: 'java'
+
+task execute(type:JavaExec) {
+    main = 'CreateCSVData'
+    classpath = sourceSets.main.runtimeClasspath
+}
