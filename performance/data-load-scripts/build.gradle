@@ -1,6 +1,44 @@
 apply plugin: 'java'
 
+
+task loadCSV(type:Exec) {
+    List<String> arguments = ['--fields-optionally-enclosed-by', '"', '--fields-terminated-by', ',', '--lines-terminated-by', '\n', '--ignore-lines', 1, '--local'];
+    arguments.add('-u')
+    arguments.add('root')
+    arguments.add('uaa')
+
+    commandLine 'mysqlimport'
+    arguments.add('identity_zone.csv')
+    args(arguments)
+
+    commandLine 'mysqlimport'
+    arguments.remove(args.length - 1)
+    arguments.add('oauth_client_details.csv')
+    args(arguments)
+
+    commandLine 'mysqlimport'
+    arguments.remove(args.length - 1)
+    arguments.add('users.csv')
+    args(arguments)
+}
+
 task execute(type:JavaExec) {
-    main = 'CreateCSVData'
-    classpath = sourceSets.main.runtimeClasspath
+    if(project.hasProperty('count') && count.split(',').length == 3) {
+        main = 'CreateCSVData'
+        classpath = sourceSets.main.runtimeClasspath
+        args(count.split(','))
+        loadCSV.execute()
+    } else{
+        println 'USAGE: `gradle loadCSV -Pcount=[numOfZones],[clientsPerZone],[usersPerZone]'
+    }
+}
+
+loadCSV.dependsOn execute
+
+task cleanDB(type: Exec) {
+    commandLine 'rm'
+    args('-rf' ,'*.csv')
+
+    commandLine 'mysql'
+    args('-u', 'root', '-D', 'uaa')
 }
