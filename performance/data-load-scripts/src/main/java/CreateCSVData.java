@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ public class CreateCSVData{
         int clientsPerZone = Integer.parseInt(args[1]);
         int usersPerZone = Integer.parseInt(args[2]);
         printZones(zones);
+        printGroups(zones);
         printUsers(zones, usersPerZone);
         printClients(zones, clientsPerZone);
         System.out.println("Files created!!");
@@ -28,6 +30,27 @@ public class CreateCSVData{
             csvData.append("\nperfzone" + i + "," + ts.toString() + "," + ts.toString() + ",0 ," +("perfzone" + i)+ "," +("perfzone" + i)+ ",Performance test zone," +config);
         }
         Path file = Paths.get("identity_zone.csv");
+        try {
+            Files.write(file, Arrays.asList(csvData.toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printGroups(int numberOfZones) {
+        StringBuffer csvData = new StringBuffer();
+        csvData.append("id,displayName,created,lastmodified,version,identity_zone_id,description");
+        List<String> scopes = Arrays.asList("clients.admin","clients.read","clients.secret","clients.write","groups.update","idps.read","idps.write","oauth.login","password.write","scim.create","scim.read","scim.userids","scim.write","scim.zones","uaa.admin");
+
+        int i=0;
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        while(i++ < numberOfZones) {
+            for(String scope: scopes) {
+                String guid = UUID.randomUUID().toString();
+                csvData.append("\n" +guid+ ","+scope+ "," + ts.toString() + "," + ts.toString() + ",0 ," + ("perfzone" + i) + ",NULL");
+            }
+        }
+        Path file = Paths.get("groups.csv");
         try {
             Files.write(file, Arrays.asList(csvData.toString()));
         } catch (IOException e) {
