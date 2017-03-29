@@ -20,7 +20,7 @@ task stopSSH (type:Exec) {
 task startSSH(type: SpawnProcessTask) {
     if(project.hasProperty("file")) {
         command "./tunnel.sh start " + file
-        ready 'Tunnel carved!'
+        ready 'Tunnel digged!'
     } else {
         command 'echo USAGE: startSSH path_to_key_file'
         ready 'Done'
@@ -38,7 +38,7 @@ task loadCSV(type:Exec) {
     arguments.add('-p'+mysqlPwd)
     arguments.add('-P')
     arguments.add(mysqlPort)
-    arguments.add(mysqlDB)
+    arguments.add(mysqlDb)
 
     commandLine 'mysqlimport'
     arguments.add('identity_zone.csv')
@@ -79,7 +79,7 @@ task createAndLoad() {
     }
 }
 
-task cleanDB(type:Exec) {
+task cleandb(type:Exec) {
     dependsOn 'deleteCSV'
 
     String deleteStatement = ""
@@ -98,7 +98,7 @@ task cleanDB(type:Exec) {
     arguments.add(mysqlPort)
     arguments.add('--execute')
     arguments.add(deleteStatement)
-    arguments.add(mysqlDB)
+    arguments.add(mysqlDb)
 
 
     commandLine 'mysql'
