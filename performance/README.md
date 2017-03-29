@@ -1,9 +1,9 @@
 README
 # UAA Performance Test
 
-## Prerequisite
+## Prerequisites
 1. Download Jmeter and add the bin directory to the path
-1. `gradle`,`mysql`, `mysqlimport`
+1. `gradle`,`mysql`, `mysqlimport` on the cli
 
 ## Run data-load-scripts
 
