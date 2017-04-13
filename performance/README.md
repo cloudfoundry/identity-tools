@@ -15,8 +15,7 @@ Perform the following gradle tasks to CSV load performance data into the target 
 1. To delete performance data from the db use `gradle cleandb`
 1. If SSH tunnel was established earlier, `gradle stopSSH` can be used to close it
 
-## Run jmeter-scripts
-1. Add `127.0.0.1 perfzone{count}.localhost` to /etc/hosts file. Add an entry for each zone that will be created. ex: perfzone1, perfzone2
-1. execute the following
- `jmeter -n -t {path_to_jmx_file} -l {log_file}.jtl`
-2. The summary report can be viewed in Jmeter GUI using the {log_file}.jtl file
+## Run `hey` performance tool
+1. Run the performance scripts from dedicated VM with name `hey go` and `hey go 2` created in acceptance AWS for this purpose
+1. `ssh ubuntu@<ip address of the vm> -i path_to_bosh_acceptance.pem`
+1. The details for executing the `hey` scripts can be found in the [uaa-hey](https://github.com/cloudfoundry/uaa-hey) project
