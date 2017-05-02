@@ -9,7 +9,7 @@ README
 
 Perform the following gradle tasks to CSV load performance data into the target mysql db.
 1. `cd data-load-scripts`
-1. Update the DB configuration in `gradle.properties`
+1. Update the DB password in `gradle.properties`. ONLY change the password. Please note that the password is for uaa aws acceptance db.
 1. If the environment requires SSH tunneling, run `gradle startSSH -Pfile=path_to_pem_file`
 1. Then run `gradle createAndLoad -Pcount=num_of_zones,num_of_clients_per_zone,num_of_users_per_zone` to create the CSV and import them to the target db
 1. To delete performance data from the db use `gradle cleandb`
