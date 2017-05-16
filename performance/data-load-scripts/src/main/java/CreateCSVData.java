@@ -17,6 +17,7 @@ public class CreateCSVData{
         printGroups(zones);
         printUsers(zones, usersPerZone);
         printClients(zones, clientsPerZone);
+        printIDPs(zones);
         System.out.println("Files created!!");
     }
 
@@ -94,6 +95,34 @@ public class CreateCSVData{
             j=0;
         }
         Path file = Paths.get("oauth_client_details.csv");
+        try {
+            Files.write(file, Arrays.asList(csvData.toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printIDPs(int numberOfZones) {
+        StringBuffer csvData = new StringBuffer();
+        csvData.append("\"id\",\"created\",\"lastmodified\",\"version\",\"identity_zone_id\",\"name\",\"origin_key\",\"type\",\"config\",\"active\"");
+        int i=0,j=0;
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        String date = ts.toString();
+        String guid = "", created,lastModified,version,identityZoneId,name,originKey,type,config,active;
+        while(i++ < numberOfZones){
+                guid = UUID.randomUUID().toString();
+                created = date;
+                lastModified = date;
+                version = "0";
+                identityZoneId = "perfzone" + i;
+                name =  "perfidp" + i;
+                originKey = "uaa";
+                type = "uaa";
+                config = "{}";
+                active = "1";
+                csvData.append(String.format("\n%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", guid, created, lastModified, version, identityZoneId, name, originKey, type, config, active));
+        }
+        Path file = Paths.get("identity_provider.csv");
         try {
             Files.write(file, Arrays.asList(csvData.toString()));
         } catch (IOException e) {

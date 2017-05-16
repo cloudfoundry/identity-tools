@@ -58,6 +58,12 @@ task loadCSV(type:Exec) {
     arguments.remove(args.length - 1)
     arguments.add('users.csv')
     args(arguments)
+
+    commandLine 'mysqlimport'
+    arguments.remove(args.length - 1)
+    arguments.add('identity_provider.csv')
+    args(arguments)
+
 }
 
 task createCSV(type:JavaExec) {
@@ -83,8 +89,8 @@ task cleandb(type:Exec) {
     dependsOn 'deleteCSV'
 
     String deleteStatement = ""
-    for(String table : Arrays.asList("users","oauth_client_details","groups")) {
-        deleteStatement += "delete from "+table+" where identity_zone_id like 'perfzone%';"
+    for(String table : Arrays.asList("users","oauth_client_details","groups","identity_provider","group_membership", "authz_approvals", "external_group_mapping", "oauth_code", "revocable_tokens", "sec_audit", "service_provider")) {
+        deleteStatement += "delete from "+table+" where identity_zone_id like 'perfzone%'; commit;"
     }
     deleteStatement += "delete from identity_zone where id like 'perfzone%';"
     List<String> arguments= []
