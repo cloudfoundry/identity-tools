@@ -118,7 +118,7 @@ public class CreateCSVData{
                 name =  "perfidp" + i;
                 originKey = "uaa";
                 type = "uaa";
-                config = "{}";
+                config = "\"{\\\"emailDomain\\\":null,\\\"additionalConfiguration\\\":null,\\\"providerDescription\\\":null,\\\"passwordPolicy\\\":null,\\\"lockoutPolicy\\\":null,\\\"disableInternalUserManagement\\\":false}\"";
                 active = "1";
                 csvData.append(String.format("\n%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", guid, created, lastModified, version, identityZoneId, name, originKey, type, config, active));
         }
