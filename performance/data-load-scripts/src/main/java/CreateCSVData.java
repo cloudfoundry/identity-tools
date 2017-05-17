@@ -90,7 +90,7 @@ public class CreateCSVData{
 
         while(i++ < numberOfZones){
             while(j++ < numberOfClients) {
-                csvData.append("\n\"client"+j+"\",\"none\",\"$2a$10$YhCmy5KLFs60yUn4.NgnFO4FsxxclNtwK8cEg8dBFUTvZgG20m4gG\",\"uaa.none\",\"client_credentials\",NULL,\"clients.read,clients.secret,idps.write,uaa.resource,zones.perfzone1.admin,clients.write,clients.admin,scim.write,idps.read,scim.read\",NULL,NULL,\"{\\\"allowedproviders\\\":[\\\"uaa\\\"],\\\"scopes\\\":[\\\"uaa.resource\\\",\\\"scim.read\\\"]}\",\"\",\"perfzone"+i+"\",\""+date+"\",1,NULL,NULL,NULL,NULL");
+                csvData.append("\n\"client"+j+"\",\"none\",\"$2a$10$YhCmy5KLFs60yUn4.NgnFO4FsxxclNtwK8cEg8dBFUTvZgG20m4gG\",\"openid,password.me\",\"client_credentials,authorization_code,password,implicit\",\"http://localhost\",\"clients.read,clients.secret,idps.write,uaa.resource,zones.perfzone1.admin,clients.write,clients.admin,scim.write,idps.read,scim.read\",NULL,NULL,\"{\\\"allowedproviders\\\":[\\\"uaa\\\"],\\\"scopes\\\":[\\\"uaa.resource\\\",\\\"scim.read\\\"]}\",\"openid\",\"perfzone"+i+"\",\""+date+"\",1,NULL,NULL,NULL,NULL");
             }
             j=0;
         }
