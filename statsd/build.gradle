@@ -39,7 +39,6 @@ dependencies {
   providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
   testCompile "org.mockito:mockito-all:1.8.5"
   testCompile "org.springframework.boot:spring-boot-starter-test"
-  testCompile "org.cloudfoundry.identity:cloudfoundry-identity-common:2.7.0"
 }
 
 task integrationTest(type: Test) {

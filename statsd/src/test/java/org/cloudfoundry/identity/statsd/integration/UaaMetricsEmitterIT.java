@@ -1,6 +1,5 @@
 package org.cloudfoundry.identity.statsd.integration;
 
-import org.cloudfoundry.identity.uaa.web.CookieBasedCsrfTokenRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
@@ -70,7 +69,7 @@ public class UaaMetricsEmitterIT {
         LinkedMultiValueMap<String,String> body = new LinkedMultiValueMap<>();
         body.add("username", TEST_USERNAME);
         body.add("password", TEST_PASSWORD);
-        body.add(CookieBasedCsrfTokenRepository.DEFAULT_CSRF_COOKIE_NAME, csrf);
+        body.add("X-Uaa-Csrf", csrf);
         loginResponse = template.exchange(UAA_BASE_URL + "/login.do",
                 HttpMethod.POST,
                 new HttpEntity<>(body, headers),

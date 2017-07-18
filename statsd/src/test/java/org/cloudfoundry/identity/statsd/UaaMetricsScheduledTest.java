@@ -1,7 +1,5 @@
 package org.cloudfoundry.identity.statsd;
 
-import org.cloudfoundry.identity.statsd.Application;
-import org.cloudfoundry.identity.statsd.UaaMetricsEmitter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
