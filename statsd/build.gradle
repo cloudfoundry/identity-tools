@@ -9,7 +9,7 @@ buildscript {
   }
 
   dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.6.RELEASE")
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.7.RELEASE")
   }
 }
 
@@ -34,7 +34,7 @@ dependencies {
   compile("com.timgroup:java-statsd-client:3.0.1")
   compile "log4j:log4j:1.2.14"
   compile "org.apache.httpcomponents:httpclient:4.2.1"
-  compile "org.springframework:spring-web:4.2.1.RELEASE"
+  compile "org.springframework:spring-web:4.3.9.RELEASE"
   providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.0.1'
   providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
   testCompile "org.mockito:mockito-all:1.8.5"
