@@ -3,10 +3,10 @@
 A collection of useful standalone projects that are used as part of
 the Identity Management solution of Cloud Foundry.
 
-## Varz
+## Statsd
 
-A JEE Servlet application that drops into any servlet container and
-exposes management data via `/varz` endpoints.
+A Spring Boot application that can be deployed as a war into any servlet container and
+collects and emit UAA metrics to udp port 8125.
 
 ## Batch
 

@@ -26,9 +26,7 @@ coverage.ec
 .springBeans
 .gradle
 build/
-classes/
-common/src/main/resources/build.properties
-common/src/main/resources/git.properties
+/classes/
 bin
 phantomjsdriver.log
-.idea/
+
