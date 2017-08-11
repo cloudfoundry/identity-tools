@@ -12,39 +12,38 @@
  */
 package org.cloudfoundry.identity.statsd;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Map;
-import java.util.Set;
-
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jmx.support.MBeanServerFactoryBean;
 
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
+
 public class MBeanMapTests {
 
-	private MBeanServerConnection server;
+    private MBeanServerConnection server;
 
-	@Before
-	public void start() throws Exception {
-		MBeanServerFactoryBean factory = new MBeanServerFactoryBean();
-		factory.setLocateExistingServerIfPossible(true);
-		factory.afterPropertiesSet();
-		server = factory.getObject();
-	}
+    @Before
+    public void start() throws Exception {
+        MBeanServerFactoryBean factory = new MBeanServerFactoryBean();
+        factory.setLocateExistingServerIfPossible(true);
+        factory.afterPropertiesSet();
+        server = factory.getObject();
+    }
 
-	@Test
-	public void testListDomain() throws Exception {
-		Set<ObjectName> names = server.queryNames(ObjectName.getInstance("java.lang:type=Runtime,*"), null);
-		System.err.println(names);
-		assertTrue(names.size() == 1);
-		MBeanMap result = new MBeanMap(server, names.iterator().next());
-		@SuppressWarnings("unchecked")
-		Map<String,String>  properties = (Map<String, String>) result.get("system_properties");
-		assertTrue(properties.containsKey("java.vm.version"));
-	}
+    @Test
+    public void testListDomain() throws Exception {
+        Set<ObjectName> names = server.queryNames(ObjectName.getInstance("java.lang:type=Runtime,*"), null);
+        System.err.println(names);
+        assertTrue(names.size() == 1);
+        MBeanMap result = new MBeanMap(server, names.iterator().next());
+        @SuppressWarnings("unchecked")
+        Map<String,String>  properties = (Map<String, String>) result.get("system_properties");
+        assertTrue(properties.containsKey("java.vm.version"));
+    }
 
 }

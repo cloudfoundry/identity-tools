@@ -13,7 +13,7 @@
 
 package org.cloudfoundry.identity.statsd;
 
-import java.io.IOException;
+import org.apache.log4j.MDC;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -24,48 +24,47 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.MDC;
+import java.io.IOException;
 
 /**
  * Simple context listener that adds an MDC entry for the context path. Can be referenced using <code>%X{context}</code>
  * in a log4j format, like this:
- * 
+ *
  * <pre>
  * log4j.appender.CONSOLE.layout.ConversionPattern=[%d] %X{context} - [%t] %5p - %c{1}: %m%n
  * </pre>
- * 
+ *
  * @author Dave Syer
- * 
+ *
  */
 public class Log4jContextInitializer implements ServletContextListener, Filter {
 
-	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		MDC.put("context", sce.getServletContext().getContextPath());
-	}
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        MDC.put("context", sce.getServletContext().getContextPath());
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+    }
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-	}
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException {
-		MDC.put("context", ((HttpServletRequest)request).getContextPath());
-		try {
-			chain.doFilter(request, response);
-		} finally {
-			MDC.remove("context");
-		}
-	}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
+        MDC.put("context", ((HttpServletRequest)request).getContextPath());
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            MDC.remove("context");
+        }
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
 }
