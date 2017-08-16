@@ -1,6 +1,4 @@
-# Cloud Foundry Login Server
+# Cloud Foundry UAA Statsd
 
-Handles authentication on `cloudfoundry.com` and delegates all other
-identity management tasks to the UAA.  Also provides OAuth2 endpoints
-issuing tokens to client apps for `cloudfoundry.com` (the tokens come
-from the UAA and no data are stored locally).
+Installs as a web application alongside the UAA application and emits audit events.
+Emits audit metrics in form of UDP packets every 5 seconds to the localhost interface on port 8125.
